@@ -1,14 +1,11 @@
 #include "../includes/main.h"
-#include "../includes/init.h"
 
-/* Project initialization */
+/* Project initialisation */
 int main(int argc, char const **argv)
 {
-    ncurses_initialiser();
+    ncursesInitialiser();
     colors();
-
-    mvprintw(10, 50, "Welcome in RiMaze");
-
+    startRiMaze("./mazes/maze-1.txt");
     getch();
     endwin();
     return EXIT_SUCCESS;

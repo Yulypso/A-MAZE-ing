@@ -1,8 +1,9 @@
 #ifndef RIMAZE_H
 #define RIMAZE_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ncurses.h>
+#include "utils.h"
+
+void startRiMaze(char *fileName);
+void displayMaze(volatile Maze *maze);
 
 #endif

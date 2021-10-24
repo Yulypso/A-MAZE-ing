@@ -1,7 +1,7 @@
 #include "../includes/init.h"
 
-/* Ncurses library initialization */
-void ncurses_initialiser()
+/* Ncurses library initialisation */
+void ncursesInitialiser()
 {
     initscr();            // Démarre le mode ncurses
     cbreak();             // Pour les saisies clavier (desac. mise en buffer)

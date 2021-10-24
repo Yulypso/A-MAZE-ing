@@ -1,11 +1,9 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ncurses.h>
+#include "utils.h"
 
-void ncurses_initialiser();
+void ncursesInitialiser();
 void colors();
 
 #endif

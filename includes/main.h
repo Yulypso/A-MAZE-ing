@@ -1,8 +1,9 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <ncurses.h>
+#include "utils.h"
+
+#include "../includes/init.h"
+#include "../includes/rimaze.h"
 
 #endif

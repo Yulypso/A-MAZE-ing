@@ -1,5 +1,7 @@
 #include "../includes/loadmaze.h"
 
+/* Load maze from file */
+
 extern volatile Maze *maze;
 extern volatile Maze *mazeTmp;
 extern volatile unsigned short int NB_BITS_CELL;
@@ -37,6 +39,8 @@ void loadMazeFromFile(char *fileName)
     for (unsigned short int i = 0; i < mazeTmp->nbL; ++i)
         for (unsigned short int j = 0; j < mazeTmp->nbC; ++j)
             *(*(mazeTmp->board + i) + j) = 15;
+
+    fclose(file);
 }
 
 void initMaze(char *fileName)

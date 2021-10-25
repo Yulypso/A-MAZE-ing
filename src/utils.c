@@ -1,12 +1,12 @@
 #include "../includes/utils.h"
 
+/* Utils */
+
 extern volatile Maze *maze;
 extern volatile Maze *mazeTmp;
 extern volatile unsigned short int NB_BITS_CELL;
 extern volatile unsigned short int maxX, maxY;
 extern volatile unsigned short int startX, startY;
-
-/* Utils */
 
 /* For console purpose only */
 void displayMazeFileConsole(volatile Maze *maze)

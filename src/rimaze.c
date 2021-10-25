@@ -10,7 +10,6 @@ volatile unsigned short int startX, startY;
 
 void startRiMaze(char *fileName)
 {
-
     NB_BITS_CELL = sizeof(volatile unsigned short int) * 8;
     maze = (Maze *)malloc(sizeof(Maze));
     mazeTmp = (Maze *)malloc(sizeof(Maze));

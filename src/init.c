@@ -1,9 +1,10 @@
 #include "../includes/init.h"
 
+/* Ncurses library initialisation */
+
 extern volatile unsigned short int maxX, maxY;
 extern volatile unsigned short int startX, startY;
 
-/* Ncurses library initialisation */
 void ncursesInitialiser()
 {
     initscr();            // Démarre le mode ncurses

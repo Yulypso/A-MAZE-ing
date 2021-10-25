@@ -6,9 +6,15 @@ int main(int argc, char const **argv)
     ncursesInitialiser();
     colors();
     initScreen();
+
+    generateMaze("./mazes/maze-4.txt", 10, 10, 0, 0, 9, 9);
+
+    /*
     attron(COLOR_PAIR(6));
     startRiMaze("./mazes/maze-2.txt");
     attroff(COLOR_PAIR(6));
+    */
+
     getch();
     endwin();
     return EXIT_SUCCESS;

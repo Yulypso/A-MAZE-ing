@@ -146,15 +146,9 @@ unsigned short int checkBreakLeft(volatile Maze *maze, unsigned short int x, uns
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LRCORNER);
             if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0) && checkWall(maze, x - 1, y, 1)) // l u r
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_BTEE);
-            return 1;
-        }
-        else // in borders
-        {
-            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 1; // TODO EDIT // error
         }
     }
-    return 0; // error
+    return 1;
 }
 
 unsigned short int checkBreakRight(volatile Maze *maze, unsigned short int x, unsigned short int y)
@@ -180,16 +174,9 @@ unsigned short int checkBreakRight(volatile Maze *maze, unsigned short int x, un
                 mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_HLINE);
             if (checkWall(maze, x + 1, y, 3) && checkWall(maze, x + 1, y, 2) && checkWall(maze, x + 1, y + 1, 0) && checkWall(maze, x + 1, y + 1, 3)) // l b r
                 mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_TTEE);
-
-            return 1;
-        }
-        else // in borders
-        {
-            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 1; // TODO EDITS
         }
     }
-    return 0; // error
+    return 1;
 }
 
 unsigned short int checkBreakUpper(volatile Maze *maze, unsigned short int x, unsigned short int y)
@@ -215,16 +202,9 @@ unsigned short int checkBreakUpper(volatile Maze *maze, unsigned short int x, un
                 mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_VLINE);
             if (checkWall(maze, x - 1, y, 2) && checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x, y + 1, 3) && checkWall(maze, x, y + 1, 0)) // u r b
                 mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_LTEE);
-
-            return 1;
-        }
-        else // in borders
-        {
-            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 1; // TODO EDITS
         }
     }
-    return 0; // error
+    return 1;
 }
 
 unsigned short int checkBreakBottom(volatile Maze *maze, unsigned short int x, unsigned short int y)
@@ -235,15 +215,24 @@ unsigned short int checkBreakBottom(volatile Maze *maze, unsigned short int x, u
     {
         if (x != maze->nbL - 1 && y != 0)
         {
-            return 1;
-        }
-        else // in borders
-        {
-            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 1; // TODO EDITS
+            /* Bottom Left part */
+            if (checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y - 1, 2)) // b
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ' ');
+            if (checkWall(maze, x, y - 1, 1) && checkWall(maze, x + 1, y - 1, 3)) // l
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ' ');
+            if (checkWall(maze, x, y, 0) && checkWall(maze, x, y - 1, 2)) // u
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ' ');
+            if (checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x, y - 1, 1) && checkWall(maze, x + 1, y - 1, 3)) // b l
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_URCORNER);
+            if (checkWall(maze, x, y - 1, 1) && checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x, y, 0) && checkWall(maze, x, y - 1, 2)) // l u
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LRCORNER);
+            if (checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x, y, 0) && checkWall(maze, x, y - 1, 2)) // b u
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_VLINE);
+            if (checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x, y - 1, 1) && checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x, y, 0) && checkWall(maze, x, y - 1, 2)) // b l u
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_RTEE);
         }
     }
-    return 0; // error
+    return 1;
 }
 
 /* Displays only wall bit positions b3 b2 b1 b0 at solver position (x,y)*/
@@ -331,220 +320,58 @@ unsigned short int checkWall(volatile Maze *maze, unsigned short int x, unsigned
 void displayDecorativeWall(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
     mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ' ');
-    if (x != 0 && y != 0 && x != maze->nbL - 1 && y != maze->nbC - 1)
+    if (x == 0)
     {
-        // if sees corners
-        /*if (checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x - 1, y + 1, 0))
-            mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_LLCORNER);
-
-        if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y - 1, 1))
-            mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LRCORNER);
-
-        if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2))
-            mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_URCORNER);
-
-        if (checkWall(maze, x + 1, y + 1, 3) && checkWall(maze, x + 1, y + 1, 0))
-            mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_ULCORNER);*/
-
-        /*switch (*(*(maze->board + x) + y))
-        {
-        case 0:
-        case 1:
-        case 2:
-        case 4:
-        case 8:
-        case 5:
-        case 10:
-            break;
-
-        case 3: // Bottom-left wall
-            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y - 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LTEE);
-            break;
-
-        case 6: // Bottom-right wall
-            if (checkWall(maze, x + 1, y + 1, 3) && checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y + 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
-            break;
-
-        case 9: // Upper-left wall
-            if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y - 1, 2))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LTEE);
-            else if (checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_TTEE);
-            break;
-
-        case 12: // Upper-right wall
-            if (checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y + 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_TTEE);
-            else if (checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_RTEE);
-            break;
-
-        case 7:
-            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y - 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LTEE);
-
-            if (checkWall(maze, x + 1, y + 1, 3) && checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y + 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
-            break;
-
-        case 11:
-            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y - 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LTEE);
-
-            if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y - 1, 2))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LTEE);
-            else if (checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_TTEE);
-            break;
-
-        case 13:
-            if (checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y + 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_TTEE);
-            else if (checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_RTEE);
-
-            if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y - 1, 2))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LTEE);
-            else if (checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_TTEE);
-            break;
-
-        case 14:
-            if (checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y + 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_TTEE);
-            else if (checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_RTEE);
-
-            if (checkWall(maze, x + 1, y + 1, 3) && checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y + 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
-            break;
-
-        case 15:
-            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y - 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y - 1, 2))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LTEE);
-
-            if (checkWall(maze, x + 1, y + 1, 3) && checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x + 1, y + 1, 3))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_BTEE);
-            else if (checkWall(maze, x + 1, y + 1, 0))
-                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
-
-            if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y - 1, 2))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LTEE);
-            else if (checkWall(maze, x - 1, y - 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_TTEE);
-
-            if (checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_PLUS);
-            else if (checkWall(maze, x - 1, y + 1, 1))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_TTEE);
-            else if (checkWall(maze, x - 1, y + 1, 0))
-                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_RTEE);
-            break;
-
-        default:
-            break;
-        }*/
-    }
-    else if (x == 0)
-    {
+        mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_HLINE);
         if (checkWall(maze, x, y, 2) && checkWall(maze, x, y, 0))
         {
             mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_TTEE);
             mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_TTEE);
         }
-        else
-            mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_HLINE);
-        if (checkWall(maze, x, y, 2))
+        else if (checkWall(maze, x, y, 2))
             mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_TTEE);
         else if (checkWall(maze, x, y, 0))
             mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_TTEE);
     }
-    else if (x == maze->nbL - 1)
+    if (x == maze->nbL - 1)
     {
+        mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_HLINE);
         if (checkWall(maze, x, y, 2) && checkWall(maze, x, y, 0))
         {
             mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_BTEE);
             mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_BTEE);
         }
-        else
-            mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_HLINE);
-        if (checkWall(maze, x, y, 2))
+        else if (checkWall(maze, x, y, 2))
             mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_BTEE);
         else if (checkWall(maze, x, y, 0))
             mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_BTEE);
     }
-    else if (y == 0)
+    if (y == 0)
     {
+        mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_VLINE);
+
+        if (checkWall(maze, x, y, 3))
+            mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LTEE);
+        if (checkWall(maze, x, y, 1))
+            mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LTEE);
         if (checkWall(maze, x, y, 3) && checkWall(maze, x, y, 1))
         {
             mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LTEE);
             mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LTEE);
         }
-        else
-            mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_VLINE);
-        if (checkWall(maze, x, y, 3))
-            mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LTEE);
-        else if (checkWall(maze, x, y, 1))
-            mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_LTEE);
     }
-    else if (y == maze->nbC - 1)
+    if (y == maze->nbC - 1)
     {
+        mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_VLINE);
+
+        if (checkWall(maze, x, y, 3))
+            mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_RTEE);
+        if (checkWall(maze, x, y, 1))
+            mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
         if (checkWall(maze, x, y, 3) && checkWall(maze, x, y, 1))
         {
             mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_RTEE);
             mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
         }
-        else
-            mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_VLINE);
-        if (checkWall(maze, x, y, 3))
-            mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_RTEE);
-        else if (checkWall(maze, x, y, 1))
-            mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
     }
 }

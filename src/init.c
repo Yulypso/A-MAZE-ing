@@ -31,9 +31,9 @@ void colors()
     init_color(COLOR_WHITE, 1000, 1000, 1000);
     init_color(COLOR_GREEN, 0, 1000, 0);
     init_color(COLOR_CYAN, 600, 800, 1000);
-    init_color(COLOR_MAGENTA, 600, 400, 600); /*(== BROWN)*/
+    init_color(COLOR_MAGENTA, 600, 400, 600);
 
-    //assume_default_colors(COLOR_WHITE, COLOR_BLACK);
+    assume_default_colors(COLOR_WHITE, COLOR_BLACK);
 
     init_pair(1, COLOR_RED, COLOR_BLACK);
     init_pair(2, COLOR_WHITE, COLOR_BLACK);

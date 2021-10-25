@@ -49,5 +49,5 @@ void initScreen()
 {
     getmaxyx(stdscr, maxX, maxY);
     startX = maxX / 8;
-    startY = maxY / 2;
+    startY = maxY / 4;
 }

@@ -34,11 +34,17 @@ typedef struct Maze
     Solver solver;
 } Maze;
 
-void loadMazeFromFile(volatile Maze *maze, char *fileName);
-void initMaze(volatile Maze *maze, char *fileName);
+void loadMazeFromFile(char *fileName);
+void initMaze(char *fileName);
 void freeMaze(volatile Maze *maze);
 void displayMazeFileConsole(volatile Maze *maze);
 void displayMazeFile(volatile Maze *maze);
 void displayCellBits(volatile Maze *maze, unsigned short int x, unsigned short int y);
+void createCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned short int y);
 void displayCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned short int y);
+void displaySolverAtPosition(unsigned short int x, unsigned short int y);
+void displayDecorativeWall(volatile Maze *maze, unsigned short int x, unsigned short int y);
+unsigned short int checkWall(volatile Maze *maze, unsigned short int x, unsigned short int y, unsigned short int pos);
+unsigned short int checkBreakLeft(volatile Maze *maze, unsigned short int x, unsigned short int y);
+
 #endif

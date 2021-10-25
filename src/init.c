@@ -1,5 +1,8 @@
 #include "../includes/init.h"
 
+extern volatile unsigned short int maxX, maxY;
+extern volatile unsigned short int startX, startY;
+
 /* Ncurses library initialisation */
 void ncursesInitialiser()
 {
@@ -40,4 +43,11 @@ void colors()
     init_pair(6, COLOR_BLUE, COLOR_BLACK);
     init_pair(7, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(8, COLOR_BLACK, COLOR_BLACK);
+}
+
+void initScreen()
+{
+    getmaxyx(stdscr, maxX, maxY);
+    startX = maxX / 8;
+    startY = maxY / 2;
 }

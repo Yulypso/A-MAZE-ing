@@ -1,6 +1,9 @@
 #include "../includes/utils.h"
 
 extern volatile Maze maze;
+extern volatile unsigned short int NB_BITS_CELL;
+extern volatile unsigned short int maxX, maxY;
+extern volatile unsigned short int startX, startY;
 
 /* Utils to load, read and writes files */
 
@@ -73,5 +76,45 @@ void displayMazeFile(volatile Maze *maze)
             printw("%hd ", *(*(maze->board + i) + j));
         }
         printw("\n");
+    }
+}
+
+/* Displays all cell's 16 bits b15 -> b0 */
+void displayCellBits(volatile Maze *maze, unsigned short int x, unsigned short int y)
+{
+    for (short int i = NB_BITS_CELL - 1; i >= 0; --i)
+        printw("%hd ", (*(*(maze->board + x) + y) >> i) & 1);
+}
+
+/* Displays only wall bit positions b3 b2 b1 b0 at solver position (x,y)*/
+void displayCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned short int y)
+{
+    for (short int i = NB_BITS_CELL - 13; i >= 0; --i)
+    {
+        if ((*(*(maze->board + x) + y) >> i) & 1)
+        {
+
+            switch (i)
+            {
+            case 0:
+                mvaddch(startX + 1 * x, startY + 1 * y - 1, ACS_VLINE);
+                break;
+
+            case 1:
+                mvaddch(startX + 1 * x + 1, startY + 1 * y, ACS_HLINE);
+                break;
+
+            case 2:
+                mvaddch(startX + 1 * x, startY + 1 * y + 1, ACS_VLINE);
+                break;
+
+            case 3:
+                mvaddch(startX + 1 * x - 1, startY + 1 * y, ACS_HLINE);
+                break;
+
+            default:
+                break;
+            }
+        }
     }
 }

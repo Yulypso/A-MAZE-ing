@@ -4,7 +4,8 @@
 int main(int argc, char const **argv)
 {
     ncursesInitialiser();
-    colors();
+    //colors();
+    initScreen();
     startRiMaze("./mazes/maze-1.txt");
     getch();
     endwin();

@@ -132,27 +132,26 @@ unsigned short int checkBreakLeft(volatile Maze *maze, unsigned short int x, uns
         if (x != 0 && y != 0) // not in borders
         {
             /* Left Upper part */
+            if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x, y - 1, 3)) // l
+                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ' ');
+            if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x, y - 1, 0)) // u
+                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ' ');
+            if (checkWall(maze, x - 1, y, 1) && checkWall(maze, x, y, 3)) // r
+                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ' ');
+            if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0) && checkWall(maze, x - 1, y, 1)) // u r
+                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LLCORNER);
+            if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y, 1) && checkWall(maze, x, y, 3) && checkWall(maze, x, y - 1, 3)) // l r
+                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_HLINE);
+            if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0)) // l u
+                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LRCORNER);
             if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0) && checkWall(maze, x - 1, y, 1)) // l u r
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_BTEE);
-            else if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0) && checkWall(maze, x - 1, y, 1)) // u r
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LLCORNER);
-            else if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y, 1) && checkWall(maze, x, y, 3) && checkWall(maze, x, y - 1, 3)) // l r
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_HLINE);
-            else if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0)) // l u
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LRCORNER);
-            else if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x, y - 1, 3)) // l
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ' ');
-            else if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x, y - 1, 0)) // u
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ' ');
-            else if (checkWall(maze, x - 1, y, 1) && checkWall(maze, x, y, 3)) // r
-                mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ' ');
-
             return 1;
         }
         else // in borders
         {
-            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 0; // TODO EDIT // error
+            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 1; // TODO EDIT // error
         }
     }
     return 0; // error
@@ -167,22 +166,27 @@ unsigned short int checkBreakRight(volatile Maze *maze, unsigned short int x, un
         if (x != maze->nbL - 1 && y != maze->nbC - 1)
         {
             /* Right Bottom part */
-            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y, 3)) // l b r
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_TTEE);
-            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x + 1, y, 0)) // l b
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_URCORNER);
-            if (checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y, 3)) // b r
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_ULCORNER);
-            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y, 3) && checkWall(maze, x, y, 1) && checkWall(maze, x, y - 1, 1)) // l r
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_HLINE);
-            if (checkWall(maze, x, y - 1, 1) && checkWall(maze, x + 1, y - 1, 3)) // l
-                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ' ');
+            if (checkWall(maze, x, y, 1) && checkWall(maze, x + 1, y, 3)) // l
+                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ' ');
+            if (checkWall(maze, x + 1, y, 2) && checkWall(maze, x + 1, y + 1, 0)) // b
+                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ' ');
+            if (checkWall(maze, x, y + 1, 1) && checkWall(maze, x + 1, y + 1, 3)) // r
+                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ' ');
+            if (checkWall(maze, x + 1, y, 3) && checkWall(maze, x + 1, y, 2) && checkWall(maze, x + 1, y + 1, 0)) // l b
+                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_URCORNER);
+            if (checkWall(maze, x + 1, y, 2) && checkWall(maze, x + 1, y + 1, 0) && checkWall(maze, x + 1, y + 1, 3)) // b r
+                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_ULCORNER);
+            if (checkWall(maze, x, y, 1) && checkWall(maze, x + 1, y, 3) && checkWall(maze, x + 1, y + 1, 3) && checkWall(maze, x, y + 1, 1)) // l r
+                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_HLINE);
+            if (checkWall(maze, x + 1, y, 3) && checkWall(maze, x + 1, y, 2) && checkWall(maze, x + 1, y + 1, 0) && checkWall(maze, x + 1, y + 1, 3)) // l b r
+                mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_TTEE);
+
             return 1;
         }
         else // in borders
         {
-            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 0; // TODO EDITS
+            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 1; // TODO EDITS
         }
     }
     return 0; // error
@@ -196,12 +200,28 @@ unsigned short int checkBreakUpper(volatile Maze *maze, unsigned short int x, un
     {
         if (x != 0 && y != maze->nbC - 1)
         {
+            /* Upper Right part */
+            if (checkWall(maze, x - 1, y, 2) && checkWall(maze, x - 1, y + 1, 0)) // u
+                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ' ');
+            if (checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x, y + 1, 3)) // r
+                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ' ');
+            if (checkWall(maze, x, y, 2) && checkWall(maze, x, y + 1, 0)) // b
+                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ' ');
+            if (checkWall(maze, x - 1, y, 2) && checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x, y + 1, 3)) // u r
+                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_LLCORNER);
+            if (checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x, y + 1, 3) && checkWall(maze, x, y + 1, 0)) // r b
+                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_ULCORNER);
+            if (checkWall(maze, x - 1, y, 2) && checkWall(maze, x - 1, y + 1, 0) && checkWall(maze, x, y, 2) && checkWall(maze, x, y + 1, 0)) // u b
+                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_VLINE);
+            if (checkWall(maze, x - 1, y, 2) && checkWall(maze, x - 1, y + 1, 1) && checkWall(maze, x, y + 1, 3) && checkWall(maze, x, y + 1, 0)) // u r b
+                mvaddch(startX + 2 * x - 1, startY + 2 * y + 1, ACS_LTEE);
+
             return 1;
         }
         else // in borders
         {
-            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 0; // TODO EDITS
+            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 1; // TODO EDITS
         }
     }
     return 0; // error
@@ -219,8 +239,8 @@ unsigned short int checkBreakBottom(volatile Maze *maze, unsigned short int x, u
         }
         else // in borders
         {
-            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
-            return 0; // TODO EDITS
+            //fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 1; // TODO EDITS
         }
     }
     return 0; // error

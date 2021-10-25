@@ -125,21 +125,18 @@ void createCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned sh
 
 unsigned short int checkBreakLeft(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
-    if (checkWall(maze, x, y - 1, 2)) // Error if right wall
-    {
-        fprintf(stderr, "%s", "[Error]: Inconsistent maze -> checkBreakLeft() \n");
-        exit(EXIT_FAILURE);
-    }
+    if (checkWall(maze, x, y - 1, 2)) // Error if right wall exists
+        return 0;
     else
     {
-        if (x != 0 && y != 0 && x != maze->nbL - 1 && y != maze->nbC - 1) // not in borders
+        if (x != 0 && y != 0) // not in borders
         {
             /* Left Upper part */
             if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0) && checkWall(maze, x - 1, y, 1)) // l u r
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_BTEE);
             else if (checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0) && checkWall(maze, x - 1, y, 1)) // u r
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LLCORNER);
-            else if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y, 1)) // l r
+            else if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y, 1) && checkWall(maze, x, y, 3) && checkWall(maze, x, y - 1, 3)) // l r
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_HLINE);
             else if (checkWall(maze, x - 1, y - 1, 1) && checkWall(maze, x - 1, y - 1, 2) && checkWall(maze, x - 1, y, 0)) // l u
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ACS_LRCORNER);
@@ -150,14 +147,83 @@ unsigned short int checkBreakLeft(volatile Maze *maze, unsigned short int x, uns
             else if (checkWall(maze, x - 1, y, 1) && checkWall(maze, x, y, 3)) // r
                 mvaddch(startX + 2 * x - 1, startY + 2 * y - 1, ' ');
 
-            /* Left Bottom part */
             return 1;
         }
         else // in borders
         {
-            return 0; // TODO EDIT
+            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 0; // TODO EDIT // error
         }
     }
+    return 0; // error
+}
+
+unsigned short int checkBreakRight(volatile Maze *maze, unsigned short int x, unsigned short int y)
+{
+    if (checkWall(maze, x, y + 1, 0)) // Error if left wall exists
+        return 0;
+    else
+    {
+        if (x != maze->nbL - 1 && y != maze->nbC - 1)
+        {
+            /* Right Bottom part */
+            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y, 3)) // l b r
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_TTEE);
+            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x + 1, y, 0)) // l b
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_URCORNER);
+            if (checkWall(maze, x + 1, y - 1, 2) && checkWall(maze, x + 1, y, 0) && checkWall(maze, x + 1, y, 3)) // b r
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_ULCORNER);
+            if (checkWall(maze, x + 1, y - 1, 3) && checkWall(maze, x + 1, y, 3) && checkWall(maze, x, y, 1) && checkWall(maze, x, y - 1, 1)) // l r
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ACS_HLINE);
+            if (checkWall(maze, x, y - 1, 1) && checkWall(maze, x + 1, y - 1, 3)) // l
+                mvaddch(startX + 2 * x + 1, startY + 2 * y - 1, ' ');
+            return 1;
+        }
+        else // in borders
+        {
+            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 0; // TODO EDITS
+        }
+    }
+    return 0; // error
+}
+
+unsigned short int checkBreakUpper(volatile Maze *maze, unsigned short int x, unsigned short int y)
+{
+    if (checkWall(maze, x - 1, y, 1)) // Error if Bottom wall exists
+        return 0;
+    else
+    {
+        if (x != 0 && y != maze->nbC - 1)
+        {
+            return 1;
+        }
+        else // in borders
+        {
+            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 0; // TODO EDITS
+        }
+    }
+    return 0; // error
+}
+
+unsigned short int checkBreakBottom(volatile Maze *maze, unsigned short int x, unsigned short int y)
+{
+    if (checkWall(maze, x + 1, y, 3)) // Error if Upper wall exists
+        return 0;
+    else
+    {
+        if (x != maze->nbL - 1 && y != 0)
+        {
+            return 1;
+        }
+        else // in borders
+        {
+            fprintf(stderr, "[Error]: Inconsistent maze : borders\n");
+            return 0; // TODO EDITS
+        }
+    }
+    return 0; // error
 }
 
 /* Displays only wall bit positions b3 b2 b1 b0 at solver position (x,y)*/
@@ -172,18 +238,41 @@ void displayCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned s
             case 0: // left
                 if (checkBreakLeft(maze, x, y))
                     mvaddch(startX + 2 * x, startY + 2 * y - 1, ' ');
+                else
+                {
+                    fprintf(stderr, "[Error]: Inconsistent maze : checkBreakLeft(x, y) (%hd, %hd) - ", x, y);
+                    exit(EXIT_FAILURE);
+                }
                 break;
 
             case 1: // bottom
-                mvaddch(startX + 2 * x + 1, startY + 2 * y, ' ');
+                if (checkBreakBottom(maze, x, y))
+                    mvaddch(startX + 2 * x + 1, startY + 2 * y, ' ');
+                else
+                {
+                    fprintf(stderr, "[Error]: Inconsistent maze : checkBreakBottom(x, y) (%hd, %hd) - ", x, y);
+                    exit(EXIT_FAILURE);
+                }
                 break;
 
             case 2: // right
-                mvaddch(startX + 2 * x, startY + 2 * y + 1, ' ');
+                if (checkBreakRight(maze, x, y))
+                    mvaddch(startX + 2 * x, startY + 2 * y + 1, ' ');
+                else
+                {
+                    fprintf(stderr, "[Error]: Inconsistent maze : checkBreakRight(x, y) (%hd, %hd) - ", x, y);
+                    exit(EXIT_FAILURE);
+                }
                 break;
 
             case 3: // upper
-                mvaddch(startX + 2 * x - 1, startY + 2 * y, ' ');
+                if (checkBreakUpper(maze, x, y))
+                    mvaddch(startX + 2 * x - 1, startY + 2 * y, ' ');
+                else
+                {
+                    fprintf(stderr, "[Error]: Inconsistent maze : checkBreakUpper(x, y) (%hd, %hd) - ", x, y);
+                    exit(EXIT_FAILURE);
+                }
                 break;
 
             default:
@@ -221,7 +310,7 @@ unsigned short int checkWall(volatile Maze *maze, unsigned short int x, unsigned
 
 void displayDecorativeWall(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
-    mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_PLUS);
+    mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ' ');
     if (x != 0 && y != 0 && x != maze->nbL - 1 && y != maze->nbC - 1)
     {
         // if sees corners

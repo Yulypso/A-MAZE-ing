@@ -349,4 +349,9 @@ void displayDecorativeWall(volatile Maze *maze, unsigned short int x, unsigned s
             mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_RTEE);
         }
     }
+    if (x != maze->nbL - 1 && y != maze->nbC - 1)
+    {
+        if (checkWall(maze, x, y, 2) && checkWall(maze, x, y + 1, 1) && checkWall(maze, x + 1, y + 1, 0) && checkWall(maze, x + 1, y, 3))
+            mvaddch(startX + 2 * x + 1, startY + 2 * y + 1, ACS_PLUS);
+    }
 }

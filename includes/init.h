@@ -6,5 +6,6 @@
 void ncursesInitialiser();
 void colors();
 void initScreen();
+void initRand();
 
 #endif

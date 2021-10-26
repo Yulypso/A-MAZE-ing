@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
+#include <time.h>
 
 typedef struct Entrance
 {

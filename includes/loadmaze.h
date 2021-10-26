@@ -4,6 +4,7 @@
 #include "utils.h"
 
 void loadMazeFromFile(char *fileName);
+void initBoard(volatile Maze *maze);
 void initMaze(char *fileName);
 void freeMaze(volatile Maze *maze);
 void createCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned short int y);

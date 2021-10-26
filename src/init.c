@@ -52,3 +52,8 @@ void initScreen()
     startX = maxX / 8;
     startY = maxY / 4;
 }
+
+void initRand()
+{
+    srand(time(NULL));
+}

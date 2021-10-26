@@ -32,15 +32,20 @@ void loadMazeFromFile(char *fileName)
 
     mazeTmp->nbL = maze->nbL;
     mazeTmp->nbC = maze->nbC;
-    mazeTmp->board = (unsigned short int **)malloc(mazeTmp->nbL * sizeof(unsigned short int *));
-    for (unsigned short int i = 0; i < mazeTmp->nbL; ++i)
-        *(mazeTmp->board + i) = (unsigned short int *)malloc(mazeTmp->nbC * sizeof(unsigned short int));
-
-    for (unsigned short int i = 0; i < mazeTmp->nbL; ++i)
-        for (unsigned short int j = 0; j < mazeTmp->nbC; ++j)
-            *(*(mazeTmp->board + i) + j) = 15;
+    initBoard(mazeTmp);
 
     fclose(file);
+}
+
+void initBoard(volatile Maze *maze)
+{
+    maze->board = (unsigned short int **)malloc(maze->nbL * sizeof(unsigned short int *));
+    for (unsigned short int i = 0; i < maze->nbL; ++i)
+        *(maze->board + i) = (unsigned short int *)malloc(maze->nbC * sizeof(unsigned short int));
+
+    for (unsigned short int i = 0; i < maze->nbL; ++i)
+        for (unsigned short int j = 0; j < maze->nbC; ++j)
+            *(*(maze->board + i) + j) = 15;
 }
 
 void initMaze(char *fileName)

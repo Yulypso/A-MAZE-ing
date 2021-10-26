@@ -7,3 +7,16 @@ Tremaux Maze Solving Algorithm
 - sinon: 
     - si le chemin par lequel vous êtes arrivé n'a qu'une marque, faites demi-tour et marquez-le une seconde fois. Ceci arrive en particulier lorsque vous atteignez un cul-de-sac.
     - sinon, choisissez un des chemins avec le moins de marques (zéro si possible, sinon une), prenez ce chemin en le marquant.
+
+0000
+
+tant que le solveur n'a pas atteint la sortie ou qu'il n'y a pas de solution: 
+    - solver lis la case pour connaitre les directions sans murs
+        - solver marque la case courante du labyrinthe (+1): 0001
+    - solver choisit une direction parmi les directions sans murs où moins de marque
+        - si direction choisie == retour en arriere: marque la case courante du labyrinthe (+1): 0002
+        - si nb égal => avancer solver au hasard d'une case entre les égaux
+
+    
+pour verifier le retour en arriere, on stocke par là ou on est arrivé. dans la case 0100 (par la droite ici)
+si direction = 0100 (droite), on marque la case encore +1. 

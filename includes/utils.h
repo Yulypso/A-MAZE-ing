@@ -37,6 +37,8 @@ typedef struct Maze
 
 void displayMazeFileConsole(volatile Maze *maze);
 void displayMazeFile(volatile Maze *maze);
-void displayCellBits(volatile Maze *maze, unsigned short int x, unsigned short int y);
+void displayCellBits(volatile Maze *maze, unsigned short int x, unsigned short int y, unsigned short int dx, unsigned short int dy);
+void displaySolverCoords(volatile Maze *maze, unsigned short int dx, unsigned short int dy);
+void displayCellNbMarks(volatile Maze *maze, unsigned short int x, unsigned short int y, unsigned short int dx, unsigned short int dy);
 
 #endif

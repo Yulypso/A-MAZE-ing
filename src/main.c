@@ -10,7 +10,7 @@ int main(int argc, char const **argv)
     generateMaze("./mazes/maze-5.txt", 10, 10);
 
     attron(COLOR_PAIR(6));
-    startRiMaze("./mazes/maze-4.txt");
+    startRiMaze("./mazes/maze-1.txt");
     attroff(COLOR_PAIR(6));
 
     getch();

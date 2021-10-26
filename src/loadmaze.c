@@ -211,7 +211,7 @@ unsigned short int checkBreakBottom(volatile Maze *maze, unsigned short int x, u
 }
 
 /* Displays only wall bit positions b3 b2 b1 b0 at solver position (x,y)*/
-void displayCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned short int y)
+void displayCellWallsAtPosition(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
     for (short int i = NB_BITS_CELL - 13; i >= 0; --i)
     {
@@ -266,7 +266,7 @@ void displayCellAtPosition(volatile Maze *maze, unsigned short int x, unsigned s
     }
 }
 
-void displaySolverAtPosition(unsigned short int x, unsigned short int y)
+void displayCells(unsigned short int x, unsigned short int y)
 {
     mvaddch(startX + 2 * x, startY + 2 * y, ACS_BULLET);
 }

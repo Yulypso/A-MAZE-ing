@@ -15,8 +15,8 @@ void startRiMaze(char *fileName)
     mazeTmp = (Maze *)malloc(sizeof(Maze));
     initMaze(fileName);
     displayMaze(maze);
+    solveMaze(maze);
 
-    //displaySolverAtPosition(maze->exit.x, maze->exit.y);
     freeMaze(mazeTmp);
     freeMaze(maze);
 }
@@ -28,12 +28,12 @@ void displayMaze(volatile Maze *maze)
         {
             displayDecorativeWall(maze, i, j);
             createCellAtPosition(mazeTmp, i, j);
-            displaySolverAtPosition(i, j);
+            displayCells(i, j);
         }
 
     for (unsigned short int i = 0; i < maze->nbL; ++i)
         for (unsigned short int j = 0; j < maze->nbC; ++j)
-            displayCellAtPosition(maze, i, j);
+            displayCellWallsAtPosition(maze, i, j);
 
     mvaddch(startX - 1, startY - 1, ACS_ULCORNER);
     mvaddch(startX - 1, startY + 2 * maze->nbC - 1, ACS_URCORNER);

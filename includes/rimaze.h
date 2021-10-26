@@ -3,6 +3,7 @@
 
 #include "utils.h"
 #include "loadmaze.h"
+#include "solvemaze.h"
 
 void startRiMaze(char *fileName);
 void displayMaze(volatile Maze *maze);

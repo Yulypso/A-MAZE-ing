@@ -35,8 +35,18 @@ void displayMazeFile(volatile Maze *maze)
 }
 
 /* For console purpose only: Displays all cell's 16 bits b15 -> b0 */
-void displayCellBits(volatile Maze *maze, unsigned short int x, unsigned short int y)
+void displayCellBits(volatile Maze *maze, unsigned short int x, unsigned short int y, unsigned short int dx, unsigned short int dy)
 {
     for (short int i = NB_BITS_CELL - 1; i >= 0; --i)
-        printw("%hd ", (*(*(maze->board + x) + y) >> i) & 1);
+        mvprintw(dx, dy - i, "%hd", (*(*(maze->board + x) + y) >> i) & 1);
+}
+
+void displaySolverCoords(volatile Maze *maze, unsigned short int dx, unsigned short int dy)
+{
+    mvprintw(dx, dy, "Solver(x, y): (%hd, %hd)", maze->solver.x, maze->solver.y);
+}
+
+void displayCellNbMarks(volatile Maze *maze, unsigned short int x, unsigned short int y, unsigned short int dx, unsigned short int dy)
+{
+    mvprintw(dx, dy, "Nb marks: [%hd]", (*(*(maze->board + maze->solver.x) + maze->solver.y) >> 4) & 15);
 }

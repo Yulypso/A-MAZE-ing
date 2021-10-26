@@ -7,13 +7,11 @@ int main(int argc, char const **argv)
     colors();
     initScreen();
 
-    generateMaze("./mazes/maze-4.txt", 10, 10, 0, 0, 9, 9);
+    generateMaze("./mazes/maze-4.txt", 10, 20, 0, 0, 9, 9);
 
-    /*
     attron(COLOR_PAIR(6));
-    startRiMaze("./mazes/maze-2.txt");
+    startRiMaze("./mazes/maze-4.txt");
     attroff(COLOR_PAIR(6));
-    */
 
     getch();
     endwin();

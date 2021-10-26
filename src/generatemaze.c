@@ -6,15 +6,23 @@ volatile Maze *genMaze;
 
 void breakWallUpper(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
+    *(*(maze->board + x) + y) &= 7;
+    *(*(maze->board + x - 1) + y) &= 13;
 }
 void breakWallRight(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
+    *(*(maze->board + x) + y) &= 11;
+    *(*(maze->board + x) + y + 1) &= 14;
 }
 void breakWallBottom(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
+    *(*(maze->board + x) + y) &= 13;
+    *(*(maze->board + x + 1) + y) &= 7;
 }
 void breakWallLeft(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
+    *(*(maze->board + x) + y) &= 14;
+    *(*(maze->board + x) + y - 1) &= 11;
 }
 
 void breakWallDirection(volatile Maze *maze, unsigned short int x, unsigned short int y, unsigned short int dir)
@@ -22,16 +30,22 @@ void breakWallDirection(volatile Maze *maze, unsigned short int x, unsigned shor
     switch (dir)
     {
     case 3:
-        breakWallUpper(maze, x, y);
+        if (x != 0)
+            breakWallUpper(maze, x, y);
         break;
     case 2:
-        breakWallRight(maze, x, y);
+        if (y != maze->nbC - 1)
+            breakWallRight(maze, x, y);
         break;
     case 1:
-        breakWallBottom(maze, x, y);
+        if (x != maze->nbL - 1)
+            breakWallBottom(maze, x, y);
         break;
     case 0:
-        breakWallLeft(maze, x, y);
+        if (y != 0)
+            breakWallLeft(maze, x, y);
+        break;
+    default:
         break;
     }
 }
@@ -69,43 +83,33 @@ unsigned short int probabilityBreakWallDirection(unsigned short int len, unsigne
 
 void breakWall(volatile Maze *maze, unsigned short int nbWall, unsigned short int x, unsigned short int y)
 {
-    if (nbWall == 4)
-    {
-        breakWallUpper(maze, x, y);
-        breakWallRight(maze, x, y);
-        breakWallBottom(maze, x, y);
-        breakWallLeft(maze, x, y);
-    }
-    else
-    {
-        unsigned short int *brokeWall = (unsigned short int *)malloc(nbWall * sizeof(unsigned short int));
-        probabilityBreakWallDirection(nbWall, brokeWall);
+    unsigned short int *brokeWall = (unsigned short int *)malloc(nbWall * sizeof(unsigned short int));
+    probabilityBreakWallDirection(nbWall, brokeWall);
 
-        for (unsigned short int i = 0; i < nbWall; ++i)
-        {
-            mvprintw(3, i + 5, "%hd ", *(brokeWall + i));
-            //breakWallDirection(maze, x, y, *(brokeWall +i));
-        }
+    for (unsigned short int i = 0; i < nbWall; ++i)
+    {
+        //mvprintw(3, i + 5, "%hd ", *(brokeWall + i));
+        breakWallDirection(maze, x, y, *(brokeWall + i));
     }
 }
 
 void buildMaze(volatile Maze *maze, Entrance en, Exit ex)
 {
-    breakWall(maze, 3, 5, 5);
-    /*for (unsigned short int i = 0; i < maze->nbL; ++i)
+    //breakWall(maze, 1, 5, 5);
+    for (unsigned short int i = 0; i < maze->nbL; ++i)
         for (unsigned short int j = 0; j < maze->nbC; ++j)
         {
-            switch (probabilityAction)
+            switch (probabilityAction())
             {
             case 0 ... 9: // Break 0 wall: 10%
                 break;
-            case 10 ... 24: // Break 1 wall: 15%
+            case 10 ... 54: // Break 1 wall: 45%
                 breakWall(maze, 1, i, j);
                 break;
-            case 25 ... 64: // Break 2 walls: 40%
+            case 55 ... 74: // Break 2 walls: 20%
                 breakWall(maze, 2, i, j);
                 break;
-            case 65 ... 84: // Break 3 walls: 20%
+            case 75 ... 84: // Break 3 walls: 10%
                 breakWall(maze, 3, i, j);
                 break;
             case 85 ... 99: // Break 4 walls: 15%
@@ -114,7 +118,7 @@ void buildMaze(volatile Maze *maze, Entrance en, Exit ex)
             default:
                 break;
             }
-        }*/
+        }
 }
 
 unsigned short int probabilityAction()
@@ -122,7 +126,7 @@ unsigned short int probabilityAction()
     return rand() % 100; // % value between (0-99)
 }
 
-void generateMazeToFile(char *fileName, volatile Maze *maze, unsigned short int nbL, unsigned short int nbC, Entrance en, Exit ex)
+void generateMazeToFile(char *fileName, volatile Maze *maze, Entrance en, Exit ex)
 {
     FILE *file = fopen(fileName, "w");
 
@@ -131,10 +135,16 @@ void generateMazeToFile(char *fileName, volatile Maze *maze, unsigned short int 
         fprintf(stderr, "[Error]: Can't open %s\n", fileName);
         exit(EXIT_FAILURE);
     }
-    fprintf(file, "%hd %hd %hd %hd %hd %hd\n", nbL, nbC, en.x, en.y, ex.x, ex.y);
+    fprintf(file, "%hd %hd %hd %hd %hd %hd\n", maze->nbL, maze->nbC, en.x, en.y, ex.x, ex.y);
 
     buildMaze(maze, en, ex);
-    //fprintf(file, "%hd", probabilityAction());
+
+    for (unsigned short int i = 0; i < maze->nbL; ++i)
+    {
+        for (unsigned short int j = 0; j < maze->nbC; ++j)
+            fprintf(file, "%hd ", *(*(maze->board + i) + j));
+        fprintf(file, "\n");
+    }
 
     fclose(file);
 }
@@ -145,8 +155,11 @@ void generateMaze(char *fileName, unsigned short int nbL, unsigned short int nbC
     Entrance en = {.x = enX, .y = enY};
     Exit ex = {.x = exX, .y = exY};
     genMaze = (Maze *)malloc(sizeof(Maze));
+    genMaze->nbL = nbL;
+    genMaze->nbC = nbC;
+
     initBoard(genMaze);
 
-    generateMazeToFile(fileName, genMaze, 10, 10, en, ex);
+    generateMazeToFile(fileName, genMaze, en, ex);
     freeMaze(genMaze);
 }

@@ -56,9 +56,7 @@ unsigned short int probabilityBreakWallDirection(unsigned short int len, unsigne
     unsigned short int index = 0;
 
     for (unsigned short int i = 0; i < len; ++i) // initialise values
-    {
         *(brokeWall + i) = 4;
-    }
 
     while (true)
     {
@@ -77,7 +75,6 @@ unsigned short int probabilityBreakWallDirection(unsigned short int len, unsigne
             }
         }
     }
-
     return dir;
 }
 
@@ -87,15 +84,11 @@ void breakWall(volatile Maze *maze, unsigned short int nbWall, unsigned short in
     probabilityBreakWallDirection(nbWall, brokeWall);
 
     for (unsigned short int i = 0; i < nbWall; ++i)
-    {
-        //mvprintw(3, i + 5, "%hd ", *(brokeWall + i));
         breakWallDirection(maze, x, y, *(brokeWall + i));
-    }
 }
 
-void buildMaze(volatile Maze *maze, Entrance en, Exit ex)
+void buildMaze(volatile Maze *maze)
 {
-    //breakWall(maze, 1, 5, 5);
     for (unsigned short int i = 0; i < maze->nbL; ++i)
         for (unsigned short int j = 0; j < maze->nbC; ++j)
         {
@@ -126,7 +119,15 @@ unsigned short int probabilityAction()
     return rand() % 100; // % value between (0-99)
 }
 
-void generateMazeToFile(char *fileName, volatile Maze *maze, Entrance en, Exit ex)
+void initEntranceCoords(volatile Maze *maze)
+{
+    maze->entrance.x = 0;
+    maze->entrance.y = rand() % maze->nbC;
+    maze->exit.x = maze->nbL - 1;
+    maze->exit.y = rand() % maze->nbC;
+}
+
+void generateMazeToFile(char *fileName, volatile Maze *maze)
 {
     FILE *file = fopen(fileName, "w");
 
@@ -135,9 +136,9 @@ void generateMazeToFile(char *fileName, volatile Maze *maze, Entrance en, Exit e
         fprintf(stderr, "[Error]: Can't open %s\n", fileName);
         exit(EXIT_FAILURE);
     }
-    fprintf(file, "%hd %hd %hd %hd %hd %hd\n", maze->nbL, maze->nbC, en.x, en.y, ex.x, ex.y);
+    fprintf(file, "%hd %hd %hd %hd %hd %hd\n", maze->nbL, maze->nbC, maze->entrance.x, maze->entrance.y, maze->exit.x, maze->exit.y);
 
-    buildMaze(maze, en, ex);
+    buildMaze(maze);
 
     for (unsigned short int i = 0; i < maze->nbL; ++i)
     {
@@ -149,17 +150,17 @@ void generateMazeToFile(char *fileName, volatile Maze *maze, Entrance en, Exit e
     fclose(file);
 }
 
-void generateMaze(char *fileName, unsigned short int nbL, unsigned short int nbC, unsigned short int enX, unsigned short int enY, unsigned short int exX, unsigned short int exY)
+void generateMaze(char *fileName, unsigned short int nbL, unsigned short int nbC)
 {
     initRand();
-    Entrance en = {.x = enX, .y = enY};
-    Exit ex = {.x = exX, .y = exY};
+
     genMaze = (Maze *)malloc(sizeof(Maze));
     genMaze->nbL = nbL;
     genMaze->nbC = nbC;
 
+    initEntranceCoords(genMaze);
     initBoard(genMaze);
+    generateMazeToFile(fileName, genMaze);
 
-    generateMazeToFile(fileName, genMaze, en, ex);
     freeMaze(genMaze);
 }

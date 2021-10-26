@@ -49,8 +49,8 @@ void colors()
 void initScreen()
 {
     getmaxyx(stdscr, maxX, maxY);
-    startX = maxX / 8;
-    startY = maxY / 4;
+    startX = maxX / 16 + 2;
+    startY = maxY / 16 + 2;
 }
 
 void initRand()

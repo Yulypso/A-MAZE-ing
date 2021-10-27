@@ -65,20 +65,22 @@ int main(int argc, char const **argv)
 
     case 6:
         if (isReady == 2 && (nbL > 0 && nbC > 0))
-            generateMaze(outputFileName, nbL, nbC);
-        else
         {
-            fprintf(stderr, "[Error] [nbL=%hd, nbC=%hd] Both must be greated than 0\n", nbL, nbC);
-            exit(EXIT_FAILURE);
+            mvprintw(5, 5, "Generated maze successful: %s", outputFileName);
+            generateMaze(outputFileName, nbL, nbC);
         }
+        else
+            mvprintw(5, 5, "[Error]: Generated maze unsuccessful: %s\n\t-> Nb lines and nb columns must be greater than 0\n", outputFileName);
         break;
 
     case 10:
-        if (isReady == 4)
+        if (isReady == 4 && (nbL > 0 && nbC > 0))
         {
             generateMaze(outputFileName, nbL, nbC);
             startRiMaze(inputFileName, speed);
         }
+        else
+            mvprintw(5, 5, "[Error]: Generated maze unsuccessful: %s\n\t-> Nb lines and nb columns must be greater than 0\n", outputFileName);
         break;
     }
 

@@ -113,3 +113,11 @@ $ ./RIMAZE -r 1 -i maze-empty-wall.txt
 > Rimaze solving a maze without any wall
 
 <br/>
+
+<p align="center" width="100%">
+    <img align="center" width="450" src="https://user-images.githubusercontent.com/59794336/139146781-37056eff-9611-4db5-9dcb-a3bc35bc7910.gif"/>
+</p>
+
+<p align="center" width="100%">
+    <img align="center" width="450" src="https://user-images.githubusercontent.com/59794336/139146802-ba3bf833-85dd-4b51-8591-fc6534160265.gif"/>
+</p>

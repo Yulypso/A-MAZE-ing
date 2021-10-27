@@ -58,6 +58,19 @@ int main(int argc, char const **argv)
         startRiMaze(inputFileName, 1);
         break;
 
+    case 2:
+        if (!strcmp(argv[1], "-h"))
+        {
+            mvprintw(5, 5, "[RiMaze Manual]");
+            mvprintw(7, 5, "-i <input file name>          Input file name, input file will be read from mazes/ directory");
+            mvprintw(8, 5, "-o <output file name>         Output file name, output file will be store in mazes/ directory");
+            mvprintw(9, 5, "-g <nb lines> <nb columns>    Generate maze with a specific size");
+            mvprintw(10, 5, "-r <speed>                    Rimaze solving the input maze with a specific speed (-1: maximum speed)");
+        }
+        else
+            mvprintw(5, 5, "[Error]: Unknown command\n\t-> Use -h to see help");
+        break;
+
     case 5:
         if (isReady == 2)
             startRiMaze(inputFileName, speed);
@@ -82,6 +95,8 @@ int main(int argc, char const **argv)
         else
             mvprintw(5, 5, "[Error]: Generated maze unsuccessful: %s\n\t-> Nb lines and nb columns must be greater than 0\n", outputFileName);
         break;
+    default:
+        mvprintw(5, 5, "[Error]: Unknown command\n\t-> Use -h to see help");
     }
 
     attroff(COLOR_PAIR(6));

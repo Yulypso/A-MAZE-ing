@@ -64,8 +64,13 @@ int main(int argc, char const **argv)
         break;
 
     case 6:
-        if (isReady == 2)
-            startRiMaze(inputFileName, speed);
+        if (isReady == 2 && (nbL > 0 && nbC > 0))
+            generateMaze(outputFileName, nbL, nbC);
+        else
+        {
+            fprintf(stderr, "[Error] [nbL=%hd, nbC=%hd] Both must be greated than 0\n", nbL, nbC);
+            exit(EXIT_FAILURE);
+        }
         break;
 
     case 10:

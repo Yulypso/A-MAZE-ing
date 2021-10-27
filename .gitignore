@@ -56,5 +56,5 @@ dkms.conf
 
 #Project files
 RIMAZE
-helper.txt
+helper-table.txt
 Maze-Solving.txt

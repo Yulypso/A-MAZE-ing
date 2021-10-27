@@ -49,7 +49,7 @@ $ ./RIMAZE -g 20 20 -o my-maze.txt
 $ make compile
 $ ./RIMAZE -g 40 200 -o maze-40-200.txt -r 10000 -i maze-40-200.txt
 ```
-> Rimaze solving a new generated 30x200 maze at speed 100000
+> Rimaze solving a new generated 40x200 maze at speed 100000
 
 <br/>
 

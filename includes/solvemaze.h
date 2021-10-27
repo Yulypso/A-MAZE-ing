@@ -16,5 +16,6 @@ unsigned short int checkBottomWall(volatile Maze *maze);
 unsigned short int checkLeftWall(volatile Maze *maze);
 unsigned short int getMinTabIndex(unsigned short int *tab);
 unsigned short int determineBestPath(volatile Maze *maze);
+unsigned short int isDeadEnd(volatile Maze *maze);
 
 #endif

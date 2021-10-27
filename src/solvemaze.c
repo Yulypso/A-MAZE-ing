@@ -30,10 +30,13 @@ void displaySolver(volatile Maze *maze)
     mvaddch(startX + 2 * maze->solver.x, startY + 2 * maze->solver.y, ACS_DIAMOND);
 }
 
-// Increments counter of the current cell
+// Increments counter of the current cell (max markers = 15)
 void markCell(volatile Maze *maze, unsigned short int nbMarks)
 {
-    *(*(maze->board + maze->solver.x) + maze->solver.y) |= (*(*(maze->board + maze->solver.x) + maze->solver.y) += nbMarks << 4);
+    if (getNbCellMarks(maze, maze->solver.x, maze->solver.y) + nbMarks <= 15)
+        *(*(maze->board + maze->solver.x) + maze->solver.y) |= (*(*(maze->board + maze->solver.x) + maze->solver.y) += nbMarks << 4);
+    else
+        *(*(maze->board + maze->solver.x) + maze->solver.y) |= 15 << 4;
 }
 
 unsigned short int getNbCellMarks(volatile Maze *maze, unsigned short int x, unsigned short int y)
@@ -117,9 +120,14 @@ unsigned short int getMinTabIndex(unsigned short int *tab)
             ++random;
     }
 
-    mvprintw(8, 100, "%hd", *(equalNbMarkersIndex + rand() % random));
-
     return *(equalNbMarkersIndex + rand() % random);
+}
+
+unsigned short int isDeadEnd(volatile Maze *maze)
+{
+    if ((!checkUpperWall(maze) + !checkRightWall(maze) + !checkBottomWall(maze) + !checkLeftWall(maze)) == 3)
+        return 1;
+    return 0;
 }
 
 unsigned short int determineBestPath(volatile Maze *maze)
@@ -135,19 +143,29 @@ unsigned short int determineBestPath(volatile Maze *maze)
     if (checkLeftWall(maze))
         markers[0] = getNbCellMarks(maze, maze->solver.x, maze->solver.y - 1);
 
-    return markers[getMinTabIndex(markers)];
+    return getMinTabIndex(markers);
 }
 
 void solveMaze(volatile Maze *maze)
 {
-    //solverGoRight(maze);
-    //solverGoBottom(maze);
-    //markCell(maze, 1);
+    /*solverGoRight(maze);
+    solverGoRight(maze);
+    solverGoRight(maze);
+    markCell(maze, 15);
+    solverGoRight(maze);
+    solverGoRight(maze);
+    markCell(maze, 15);
+    solverGoLeft(maze);
+    solverGoBottom(maze);
+    markCell(maze, 15);
+    solverGoUpper(maze);*/
+
     //markCell(maze, 1);
     //markCell(maze);
     //solverGoRight(maze);
     //solverGoLeft(maze);
 
+    /* Control panel */
     displaySolver(maze);
     displaySolverCoords(maze, 0, 35);
     displayCellBits(maze, maze->solver.x, maze->solver.y, 0, 75);
@@ -163,4 +181,6 @@ void solveMaze(volatile Maze *maze)
         mvprintw(3, 100, "Left path found");
 
     mvprintw(5, 100, "Best path: %hd", determineBestPath(maze));
+    mvprintw(7, 100, "isDeadEnd: %hd", isDeadEnd(maze));
+    mvprintw(9, 100, "nb cell marks: %hd", getNbCellMarks(maze, maze->solver.x, maze->solver.y));
 }

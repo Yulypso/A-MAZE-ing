@@ -161,6 +161,13 @@ unsigned short int isDeadEnd(volatile Maze *maze)
     return 0;
 }
 
+unsigned short int isSuperDeadEnd(volatile Maze *maze)
+{
+    if ((!checkUpperWall(maze) + !checkRightWall(maze) + !checkBottomWall(maze) + !checkLeftWall(maze)) == 4)
+        return 1;
+    return 0;
+}
+
 unsigned short int determineBestPath(volatile Maze *maze)
 {
     unsigned short int markers[4] = {16, 16, 16, 16};
@@ -185,6 +192,14 @@ void solveMaze(volatile Maze *maze)
         displayEntrance(maze);
         displayExit(maze);
 
+        if (isSuperDeadEnd(maze))
+        {
+            attron(COLOR_PAIR(1));
+            mvprintw(1, 12, "No solution found");
+            attroff(COLOR_PAIR(1));
+            solving = 0;
+            break;
+        }
         isDeadEnd(maze) ? markCell(maze, 3) : markCell(maze, 1);
 
         switch (determineBestPath(maze))
@@ -210,23 +225,31 @@ void solveMaze(volatile Maze *maze)
             solverGoLeft(maze);
             break;
         case 4:
-            mvprintw(13, 100, "No solution found");
+            attron(COLOR_PAIR(1));
+            mvprintw(1, 12, "No solution found");
+            attroff(COLOR_PAIR(1));
             solving = 0;
             break;
         }
 
-        for (volatile unsigned int i = 0; i < 50000; ++i)
+        //for (volatile unsigned int i = 0; i < 2000000; ++i)
+        for (volatile unsigned int i = 0; i < 10; ++i)
         {
-            if (i == 49000)
+            //if (i == 1999999)
+            if (i == 0)
             {
-                /* Control panel */
                 displaySolver(maze);
+                /* For development only */
+                //displayControlPanel(maze);
                 refresh();
-                displayControlPanel(maze);
             }
             mvprintw(0, 0, "");
         }
     }
     if (solving == 1)
-        mvprintw(13, 100, "Found a solution!");
+    {
+        attron(COLOR_PAIR(3));
+        mvprintw(1, 12, "Found a solution!");
+        attroff(COLOR_PAIR(3));
+    }
 }

@@ -7,7 +7,7 @@ int main(int argc, char const **argv)
     colors();
     initScreen();
 
-    generateMaze("./mazes/maze-5.txt", 10, 10);
+    generateMaze("./mazes/maze-5.txt", 30, 200);
 
     erase();
     clear();

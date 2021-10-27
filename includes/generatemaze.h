@@ -16,5 +16,7 @@ void breakWallUpper(volatile Maze *maze, unsigned short int x, unsigned short in
 void breakWallRight(volatile Maze *maze, unsigned short int x, unsigned short int y);
 void breakWallBottom(volatile Maze *maze, unsigned short int x, unsigned short int y);
 void breakWallLeft(volatile Maze *maze, unsigned short int x, unsigned short int y);
+void displayEntrance(volatile Maze *maze);
+void displayExit(volatile Maze *maze);
 
 #endif

@@ -2,6 +2,7 @@
 #define RIMAZE_H
 
 #include "utils.h"
+#include "generatemaze.h"
 #include "loadmaze.h"
 #include "solvemaze.h"
 

@@ -30,6 +30,16 @@ void displaySolver(volatile Maze *maze)
     mvaddch(startX + 2 * maze->solver.x, startY + 2 * maze->solver.y, ACS_DIAMOND);
 }
 
+void displaySolverTrace(volatile Maze *maze)
+{
+    mvaddch(startX + 2 * maze->solver.x, startY + 2 * maze->solver.y, ACS_BULLET);
+}
+
+void hideSolver(volatile Maze *maze)
+{
+    mvaddch(startX + 2 * maze->solver.x, startY + 2 * maze->solver.y, ' ');
+}
+
 // Increments counter of the current cell (max markers = 15)
 void markCell(volatile Maze *maze, unsigned short int nbMarks)
 {
@@ -70,6 +80,27 @@ unsigned short int checkLeftWall(volatile Maze *maze)
     if ((*(*(maze->board + maze->solver.x) + maze->solver.y) & 1) >> 0 == 1)
         return 0;
     return 1;
+}
+
+void displayControlPanel(volatile Maze *maze)
+{
+    displaySolverCoords(maze, 0, 35);
+    displayCellBits(maze, maze->solver.x, maze->solver.y, 0, 75);
+    displayCellNbMarks(maze, maze->solver.x, maze->solver.y, 0, 80);
+
+    if (checkUpperWall(maze))
+        mvprintw(0, 100, "Upper path found");
+    if (checkRightWall(maze))
+        mvprintw(1, 100, "Right path found");
+    if (checkBottomWall(maze))
+        mvprintw(2, 100, "Bottom path found");
+    if (checkLeftWall(maze))
+        mvprintw(3, 100, "Left path found");
+
+    mvprintw(5, 100, "Best path: %hd", determineBestPath(maze));
+    mvprintw(7, 100, "isDeadEnd: %hd", isDeadEnd(maze));
+    mvprintw(9, 100, "nb cell marks: %hd", getNbCellMarks(maze, maze->solver.x, maze->solver.y));
+    mvprintw(11, 100, "is Exit: %hd", maze->solver.x == maze->exit.x && maze->solver.y == maze->exit.y);
 }
 
 // return index of min value and random index for equals min value
@@ -148,39 +179,54 @@ unsigned short int determineBestPath(volatile Maze *maze)
 
 void solveMaze(volatile Maze *maze)
 {
-    /*solverGoRight(maze);
-    solverGoRight(maze);
-    solverGoRight(maze);
-    markCell(maze, 15);
-    solverGoRight(maze);
-    solverGoRight(maze);
-    markCell(maze, 15);
-    solverGoLeft(maze);
-    solverGoBottom(maze);
-    markCell(maze, 15);
-    solverGoUpper(maze);*/
+    unsigned short int solving = 1;
+    while (!(maze->solver.x == maze->exit.x && maze->solver.y == maze->exit.y) && solving)
+    {
+        displayEntrance(maze);
+        displayExit(maze);
 
-    //markCell(maze, 1);
-    //markCell(maze);
-    //solverGoRight(maze);
-    //solverGoLeft(maze);
+        isDeadEnd(maze) ? markCell(maze, 3) : markCell(maze, 1);
 
-    /* Control panel */
-    displaySolver(maze);
-    displaySolverCoords(maze, 0, 35);
-    displayCellBits(maze, maze->solver.x, maze->solver.y, 0, 75);
-    displayCellNbMarks(maze, maze->solver.x, maze->solver.y, 0, 80);
+        switch (determineBestPath(maze))
+        {
+        case 3:
+            hideSolver(maze);
+            displaySolverTrace(maze);
+            solverGoUpper(maze);
+            break;
+        case 2:
+            hideSolver(maze);
+            displaySolverTrace(maze);
+            solverGoRight(maze);
+            break;
+        case 1:
+            hideSolver(maze);
+            displaySolverTrace(maze);
+            solverGoBottom(maze);
+            break;
+        case 0:
+            hideSolver(maze);
+            displaySolverTrace(maze);
+            solverGoLeft(maze);
+            break;
+        case 4:
+            mvprintw(13, 100, "No solution found");
+            solving = 0;
+            break;
+        }
 
-    if (checkUpperWall(maze))
-        mvprintw(0, 100, "Upper path found");
-    if (checkRightWall(maze))
-        mvprintw(1, 100, "Right path found");
-    if (checkBottomWall(maze))
-        mvprintw(2, 100, "Bottom path found");
-    if (checkLeftWall(maze))
-        mvprintw(3, 100, "Left path found");
-
-    mvprintw(5, 100, "Best path: %hd", determineBestPath(maze));
-    mvprintw(7, 100, "isDeadEnd: %hd", isDeadEnd(maze));
-    mvprintw(9, 100, "nb cell marks: %hd", getNbCellMarks(maze, maze->solver.x, maze->solver.y));
+        for (volatile unsigned int i = 0; i < 50000; ++i)
+        {
+            if (i == 49000)
+            {
+                /* Control panel */
+                displaySolver(maze);
+                refresh();
+                displayControlPanel(maze);
+            }
+            mvprintw(0, 0, "");
+        }
+    }
+    if (solving == 1)
+        mvprintw(13, 100, "Found a solution!");
 }

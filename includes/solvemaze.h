@@ -2,6 +2,7 @@
 #define SOLVEMAZE_H
 
 #include "utils.h"
+#include "generatemaze.h"
 
 void solveMaze(volatile Maze *maze);
 void solverGoUpper(volatile Maze *maze);
@@ -17,5 +18,9 @@ unsigned short int checkLeftWall(volatile Maze *maze);
 unsigned short int getMinTabIndex(unsigned short int *tab);
 unsigned short int determineBestPath(volatile Maze *maze);
 unsigned short int isDeadEnd(volatile Maze *maze);
+void hideSolver(volatile Maze *maze);
+void displaySolver(volatile Maze *maze);
+void displayControlPanel(volatile Maze *maze);
+void displaySolverTrace(volatile Maze *maze);
 
 #endif

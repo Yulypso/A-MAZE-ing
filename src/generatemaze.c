@@ -3,6 +3,7 @@
 /* Generate maze and save it into file */
 
 volatile Maze *genMaze;
+extern volatile unsigned short int startX, startY;
 
 void breakWallUpper(volatile Maze *maze, unsigned short int x, unsigned short int y)
 {
@@ -125,6 +126,20 @@ void initEntranceCoords(volatile Maze *maze)
     maze->entrance.y = rand() % maze->nbC;
     maze->exit.x = maze->nbL - 1;
     maze->exit.y = rand() % maze->nbC;
+}
+
+void displayEntrance(volatile Maze *maze)
+{
+    attron(COLOR_PAIR(3));
+    mvaddch(startX + 2 * maze->entrance.x, startY + 2 * maze->entrance.y, 'E');
+    attroff(COLOR_PAIR(3));
+}
+
+void displayExit(volatile Maze *maze)
+{
+    attron(COLOR_PAIR(1));
+    mvaddch(startX + 2 * maze->exit.x, startY + 2 * maze->exit.y, 'S');
+    attroff(COLOR_PAIR(1));
 }
 
 void generateMazeToFile(char *fileName, volatile Maze *maze)

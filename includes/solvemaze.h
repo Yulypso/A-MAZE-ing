@@ -4,7 +4,7 @@
 #include "utils.h"
 #include "generatemaze.h"
 
-void solveMaze(volatile Maze *maze);
+void solveMaze(volatile Maze *maze, unsigned short int speed);
 void solverGoUpper(volatile Maze *maze);
 void solverGoRight(volatile Maze *maze);
 void solverGoBottom(volatile Maze *maze);
@@ -23,5 +23,6 @@ void hideSolver(volatile Maze *maze);
 void displaySolver(volatile Maze *maze);
 void displayControlPanel(volatile Maze *maze);
 void displaySolverTrace(volatile Maze *maze);
+unsigned short int checkSpeed(unsigned short int speed);
 
 #endif

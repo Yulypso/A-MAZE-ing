@@ -8,14 +8,14 @@ volatile unsigned short int NB_BITS_CELL;
 volatile unsigned short int maxX, maxY;
 volatile unsigned short int startX, startY;
 
-void startRiMaze(char *fileName)
+void startRiMaze(char *fileName, unsigned short int speed)
 {
     NB_BITS_CELL = sizeof(volatile unsigned short int) * 8;
     maze = (Maze *)malloc(sizeof(Maze));
     mazeTmp = (Maze *)malloc(sizeof(Maze));
     initMaze(fileName);
     displayMaze(maze);
-    solveMaze(maze);
+    solveMaze(maze, speed);
 
     freeMaze(mazeTmp);
     freeMaze(maze);

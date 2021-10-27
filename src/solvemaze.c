@@ -184,7 +184,14 @@ unsigned short int determineBestPath(volatile Maze *maze)
     return getMinTabIndex(markers);
 }
 
-void solveMaze(volatile Maze *maze)
+unsigned short int checkSpeed(unsigned short int speed)
+{
+    if (speed < 1)
+        return 1;
+    return speed;
+}
+
+void solveMaze(volatile Maze *maze, unsigned short int speed)
 {
     unsigned short int solving = 1;
     while (!(maze->solver.x == maze->exit.x && maze->solver.y == maze->exit.y) && solving)
@@ -200,7 +207,8 @@ void solveMaze(volatile Maze *maze)
             solving = 0;
             break;
         }
-        isDeadEnd(maze) ? markCell(maze, 3) : markCell(maze, 1);
+
+        isDeadEnd(maze) ? markCell(maze, 15) : markCell(maze, 1);
 
         switch (determineBestPath(maze))
         {
@@ -232,11 +240,9 @@ void solveMaze(volatile Maze *maze)
             break;
         }
 
-        //for (volatile unsigned int i = 0; i < 2000000; ++i)
-        for (volatile unsigned int i = 0; i < 10; ++i)
+        for (volatile unsigned int i = 0; i < (2000000 / checkSpeed(speed)); ++i)
         {
-            //if (i == 1999999)
-            if (i == 0)
+            if (i == (2000000 / checkSpeed(speed)) - 1)
             {
                 displaySolver(maze);
                 /* For development only */

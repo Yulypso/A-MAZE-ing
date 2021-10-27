@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
+#include <stdbool.h>
+#include <unistd.h>
 #include <time.h>
 
 typedef struct Entrance

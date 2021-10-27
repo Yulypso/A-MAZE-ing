@@ -53,3 +53,8 @@ dkms.conf
 
 #Vscode
 .vscode
+
+#Project files
+RIMAZE
+helper.txt
+Maze-Solving.txt

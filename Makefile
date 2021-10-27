@@ -1,11 +1,11 @@
 CC = gcc
 CC_FLAGS = -Wall -lncurses
 SRCDIR   = src
-EXEC = EXEC
+EXEC = RIMAZE
 
 all: compile run clean
 
-run: compile
+run: 
 	@./$(EXEC)
 
 compile:

@@ -6,7 +6,7 @@
 #include "loadmaze.h"
 #include "solvemaze.h"
 
-void startRiMaze(char *fileName);
+void startRiMaze(char *fileName, unsigned short int speed);
 void displayMaze(volatile Maze *maze);
 
 #endif

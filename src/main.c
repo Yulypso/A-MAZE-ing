@@ -10,7 +10,7 @@ int main(int argc, char const **argv)
     clear();
     attron(COLOR_PAIR(6));
 
-    unsigned short int speed, nbL, nbC;
+    unsigned short int speed, nbL, nbC, dev = 0;
     char *inputFileName = NULL;
     char *outputFileName = NULL;
     inputFileName = (char *)malloc(50 * sizeof(char));
@@ -22,6 +22,8 @@ int main(int argc, char const **argv)
 
     for (unsigned short int i = 0; i < argc; ++i)
     {
+        if (!strcmp(argv[1], "-d"))
+            dev = 1;
         if (!(strcmp(argv[i], "-r")))
         {
             speed = atoi(argv[i + 1]);
@@ -55,10 +57,11 @@ int main(int argc, char const **argv)
 
         strcat(inputFileName, "maze.txt");
         speed = 1;
-        startRiMaze(inputFileName, 1);
+        startRiMaze(inputFileName, 1, dev);
         break;
 
     case 2:
+    case 3:
         if (!strcmp(argv[1], "-h"))
         {
             mvprintw(5, 5, "[RiMaze Manual]");
@@ -67,13 +70,15 @@ int main(int argc, char const **argv)
             mvprintw(9, 5, "-g <nb lines> <nb columns>    Generate maze with a specific size");
             mvprintw(10, 5, "-r <speed>                    Rimaze solving the input maze with a specific speed (-1: maximum speed)");
         }
+        else if (!strcmp(argv[1], "-d"))
+            mvprintw(0, 0, "");
         else
             mvprintw(5, 5, "[Error]: Unknown command\n\t-> Use -h to see help");
         break;
 
     case 5:
         if (isReady == 2)
-            startRiMaze(inputFileName, speed);
+            startRiMaze(inputFileName, speed, dev);
         break;
 
     case 6:
@@ -82,19 +87,23 @@ int main(int argc, char const **argv)
             mvprintw(5, 5, "Generated maze successful: %s", outputFileName);
             generateMaze(outputFileName, nbL, nbC);
         }
+        else if (isReady == 2)
+            startRiMaze(inputFileName, speed, dev);
         else
             mvprintw(5, 5, "[Error]: Generated maze unsuccessful: %s\n\t-> Nb lines and nb columns must be greater than 0\n", outputFileName);
         break;
 
     case 10:
+    case 11:
         if (isReady == 4 && (nbL > 0 && nbC > 0))
         {
             generateMaze(outputFileName, nbL, nbC);
-            startRiMaze(inputFileName, speed);
+            startRiMaze(inputFileName, speed, dev);
         }
         else
             mvprintw(5, 5, "[Error]: Generated maze unsuccessful: %s\n\t-> Nb lines and nb columns must be greater than 0\n", outputFileName);
         break;
+
     default:
         mvprintw(5, 5, "[Error]: Unknown command\n\t-> Use -h to see help");
     }

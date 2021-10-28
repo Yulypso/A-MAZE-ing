@@ -4,7 +4,7 @@
 #include "utils.h"
 #include "generatemaze.h"
 
-void solveMaze(volatile Maze *maze, unsigned short int speed);
+void solveMaze(volatile Maze *maze, unsigned short int speed, unsigned short int dev);
 void solverGoUpper(volatile Maze *maze);
 void solverGoRight(volatile Maze *maze);
 void solverGoBottom(volatile Maze *maze);
@@ -19,6 +19,7 @@ unsigned short int getMinTabIndex(unsigned short int *tab);
 unsigned short int determineBestPath(volatile Maze *maze);
 unsigned short int isDeadEnd(volatile Maze *maze);
 unsigned short int isSuperDeadEnd(volatile Maze *maze);
+unsigned short int isHalfDeadEnd(volatile Maze *maze);
 void hideSolver(volatile Maze *maze);
 void displaySolver(volatile Maze *maze);
 void displayControlPanel(volatile Maze *maze);
@@ -30,5 +31,6 @@ unsigned short int isMainPathCellMarked(volatile Maze *maze, unsigned short int 
 unsigned short int isMainPathCellAlreadyMarked(volatile Maze *maze, unsigned short int x, unsigned short int y);
 void displayMainPath(volatile Maze *maze);
 unsigned short int isMountain(volatile Maze *maze, unsigned short int x, unsigned short int y);
+void displayMarkers(volatile Maze *maze);
 
 #endif

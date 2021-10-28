@@ -24,5 +24,11 @@ void displaySolver(volatile Maze *maze);
 void displayControlPanel(volatile Maze *maze);
 void displaySolverTrace(volatile Maze *maze);
 unsigned short int checkSpeed(unsigned short int speed);
+void markMainPathCell(volatile Maze *maze);
+void unmarkMainPathCell(volatile Maze *maze);
+unsigned short int isMainPathCellMarked(volatile Maze *maze, unsigned short int x, unsigned short int y);
+unsigned short int isMainPathCellAlreadyMarked(volatile Maze *maze, unsigned short int x, unsigned short int y);
+void displayMainPath(volatile Maze *maze);
+unsigned short int isMountain(volatile Maze *maze, unsigned short int x, unsigned short int y);
 
 #endif

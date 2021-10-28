@@ -49,14 +49,14 @@ void displayMainPath(volatile Maze *maze)
 {
     for (unsigned short int i = 0; i < maze->nbL; ++i)
         for (unsigned short j = 0; j < maze->nbC; ++j)
-            !isMainPathCellMarked(maze, i, j) ? NULL : mvaddch(startX + 2 * i, startY + 2 * j, ACS_BULLET);
+            isMainPathCellMarked(maze, i, j) ? mvaddch(startX + 2 * i, startY + 2 * j, ACS_BULLET) : NULL;
 }
 
 void displayMountains(volatile Maze *maze)
 {
     for (unsigned short int i = 0; i < maze->nbL; ++i)
         for (unsigned short j = 0; j < maze->nbC; ++j)
-            !isMountain(maze, i, j) ? NULL : mvaddch(startX + 2 * i, startY + 2 * j, ACS_BLOCK);
+            isMountain(maze, i, j) ? mvaddch(startX + 2 * i, startY + 2 * j, ACS_BLOCK) : NULL;
 }
 
 void hideSolver(volatile Maze *maze)

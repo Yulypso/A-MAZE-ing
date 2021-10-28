@@ -22,7 +22,7 @@ int main(int argc, char const **argv)
 
     for (unsigned short int i = 0; i < argc; ++i)
     {
-        if (!strcmp(argv[1], "-d"))
+        if (!(strcmp(argv[i], "-d")))
             dev = 1;
         if (!(strcmp(argv[i], "-r")))
         {
@@ -60,7 +60,6 @@ int main(int argc, char const **argv)
         startRiMaze(inputFileName, 1, dev);
         break;
 
-    case 2:
     case 3:
         if (!strcmp(argv[1], "-h"))
         {

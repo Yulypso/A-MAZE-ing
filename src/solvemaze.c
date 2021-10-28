@@ -35,13 +35,13 @@ void displaySolverTrace(volatile Maze *maze)
     mvaddch(startX + 2 * maze->solver.x, startY + 2 * maze->solver.y, ACS_BULLET);
 }
 
-void displayMarkers(volatile Maze *maze)
+void displayMarkers(volatile Maze *maze, unsigned short int dx, unsigned short int dy)
 {
     for (unsigned short int i = 0; i < maze->nbL; ++i)
         for (unsigned short j = 0; j < maze->nbC; ++j)
         {
             move(startX + i, startY + j);
-            mvprintw(startX + 2 * i, 30 + startY + 3 * j, "%hd ", getNbCellMarks(maze, i, j));
+            mvprintw(startX + 2 * i + dx, startY + 3 * j + dy, "%hd ", getNbCellMarks(maze, i, j));
         }
 }
 
@@ -128,25 +128,37 @@ unsigned short int checkLeftWall(volatile Maze *maze)
 
 void displayControlPanel(volatile Maze *maze)
 {
-    displaySolverCoords(maze, 0, 35);
-    displayCellBits(maze, maze->solver.x, maze->solver.y, 0, 75);
-    displayCellNbMarks(maze, maze->solver.x, maze->solver.y, 0, 80);
+    displaySolverCoords(maze, 0, maze->nbC * 2 + 26);
+    displayCellBits(maze, maze->solver.x, maze->solver.y, 2, maze->nbC * 2 + 42);
 
     if (checkUpperWall(maze))
-        mvprintw(0, 100, "Upper path found");
+        mvprintw(0, maze->nbC * 2 + 90, "Upper path found");
+    else
+        mvprintw(0, maze->nbC * 2 + 90, "                ");
     if (checkRightWall(maze))
-        mvprintw(1, 100, "Right path found");
+        mvprintw(1, maze->nbC * 2 + 90, "Right path found");
+    else
+        mvprintw(1, maze->nbC * 2 + 90, "                ");
     if (checkBottomWall(maze))
-        mvprintw(2, 100, "Bottom path found");
+        mvprintw(2, maze->nbC * 2 + 90, "Bottom path found");
+    else
+        mvprintw(2, maze->nbC * 2 + 90, "                 ");
     if (checkLeftWall(maze))
-        mvprintw(3, 100, "Left path found");
+        mvprintw(3, maze->nbC * 2 + 90, "Left path found");
+    else
+        mvprintw(3, maze->nbC * 2 + 90, "               ");
 
-    displayMarkers(maze);
+    displayMarkers(maze, 0, maze->nbC * 2 + 10);
 
-    mvprintw(5, 100, "Best path: %hd", determineBestPath(maze));
-    mvprintw(7, 100, "isDeadEnd: %hd", isDeadEnd(maze));
-    mvprintw(9, 100, "nb cell marks: %hd", getNbCellMarks(maze, maze->solver.x, maze->solver.y));
-    mvprintw(11, 100, "is Exit: %hd", maze->solver.x == maze->exit.x && maze->solver.y == maze->exit.y);
+    mvprintw(5, maze->nbC * 2 + 90, "Best path:    ");
+    mvprintw(5, maze->nbC * 2 + 90, "Best path: %hd", determineBestPath(maze));
+    mvprintw(7, maze->nbC * 2 + 90, "isDeadEnd:    ");
+    mvprintw(7, maze->nbC * 2 + 90, "isDeadEnd: %hd", isDeadEnd(maze));
+    mvprintw(9, maze->nbC * 2 + 90, "nb cell marks:    ");
+    mvprintw(9, maze->nbC * 2 + 90, "nb cell marks: %hd", getNbCellMarks(maze, maze->solver.x, maze->solver.y));
+    mvprintw(11, maze->nbC * 2 + 90, "is Exit:    ");
+    mvprintw(11, maze->nbC * 2 + 90, "is Exit: %hd", maze->solver.x == maze->exit.x && maze->solver.y == maze->exit.y);
+    displayCellNbMarks(maze, maze->solver.x, maze->solver.y, 13, maze->nbC * 2 + 90);
 }
 
 // return index of min value and random index for equals min value
@@ -293,7 +305,7 @@ void solveMaze(volatile Maze *maze, unsigned short int speed, unsigned short int
                 displayExit(maze);
                 displaySolver(maze);
                 /* For development only */
-                dev ?: displayControlPanel(maze);
+                !dev ?: displayControlPanel(maze);
                 refresh();
             }
             mvprintw(0, 0, "");
@@ -304,32 +316,32 @@ void solveMaze(volatile Maze *maze, unsigned short int speed, unsigned short int
         case 3:
             hideSolver(maze);
             //displaySolverTrace(maze);
-            !isMainPathCellMarked(maze, maze->solver.x - 1, maze->solver.y) ?: unmarkMainPathCell(maze);
             solverGoUpper(maze);
+            !isMainPathCellMarked(maze, maze->solver.x + 1, maze->solver.y) ?: unmarkMainPathCell(maze);
             if (isMountain(maze, maze->solver.x + 1, maze->solver.y) && isHalfDeadEnd(maze))
                 markCell(maze, 15);
             break;
         case 2:
             hideSolver(maze);
             //displaySolverTrace(maze);
-            !isMainPathCellMarked(maze, maze->solver.x, maze->solver.y + 1) ?: unmarkMainPathCell(maze);
             solverGoRight(maze);
+            !isMainPathCellMarked(maze, maze->solver.x, maze->solver.y - 1) ?: unmarkMainPathCell(maze);
             if (isMountain(maze, maze->solver.x, maze->solver.y - 1) && isHalfDeadEnd(maze))
                 markCell(maze, 15);
             break;
         case 1:
             hideSolver(maze);
             //displaySolverTrace(maze);
-            !isMainPathCellMarked(maze, maze->solver.x + 1, maze->solver.y) ?: unmarkMainPathCell(maze);
             solverGoBottom(maze);
+            !isMainPathCellMarked(maze, maze->solver.x - 1, maze->solver.y) ?: unmarkMainPathCell(maze);
             if (isMountain(maze, maze->solver.x - 1, maze->solver.y) && isHalfDeadEnd(maze))
                 markCell(maze, 15);
             break;
         case 0:
             hideSolver(maze);
             //displaySolverTrace(maze);
-            !isMainPathCellMarked(maze, maze->solver.x, maze->solver.y - 1) ?: unmarkMainPathCell(maze);
             solverGoLeft(maze);
+            !isMainPathCellMarked(maze, maze->solver.x, maze->solver.y + 1) ?: unmarkMainPathCell(maze);
             if (isMountain(maze, maze->solver.x, maze->solver.y + 1) && isHalfDeadEnd(maze))
                 markCell(maze, 15);
             break;
@@ -346,11 +358,14 @@ void solveMaze(volatile Maze *maze, unsigned short int speed, unsigned short int
         attron(COLOR_PAIR(3));
         mvprintw(1, 12, "Found a solution!");
         displayMainPath(maze);
+        attron(COLOR_PAIR(5));
+        displayMountains(maze);
+        attroff(COLOR_PAIR(5));
         displayEntrance(maze);
         displayExit(maze);
         displaySolver(maze);
         refresh();
-        dev ?: displayControlPanel(maze);
+        !dev ?: displayControlPanel(maze);
         attroff(COLOR_PAIR(3));
     }
 }

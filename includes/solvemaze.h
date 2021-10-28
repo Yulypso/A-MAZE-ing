@@ -31,6 +31,6 @@ unsigned short int isMainPathCellMarked(volatile Maze *maze, unsigned short int 
 unsigned short int isMainPathCellAlreadyMarked(volatile Maze *maze, unsigned short int x, unsigned short int y);
 void displayMainPath(volatile Maze *maze);
 unsigned short int isMountain(volatile Maze *maze, unsigned short int x, unsigned short int y);
-void displayMarkers(volatile Maze *maze);
+void displayMarkers(volatile Maze *maze, unsigned short int dx, unsigned short int dy);
 
 #endif

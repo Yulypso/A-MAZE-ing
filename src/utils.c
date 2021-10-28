@@ -43,10 +43,12 @@ void displayCellBits(volatile Maze *maze, unsigned short int x, unsigned short i
 
 void displaySolverCoords(volatile Maze *maze, unsigned short int dx, unsigned short int dy)
 {
+    mvprintw(dx, dy, "Solver(x, y):             ", maze->solver.x, maze->solver.y);
     mvprintw(dx, dy, "Solver(x, y): (%hd, %hd)", maze->solver.x, maze->solver.y);
 }
 
 void displayCellNbMarks(volatile Maze *maze, unsigned short int x, unsigned short int y, unsigned short int dx, unsigned short int dy)
 {
-    mvprintw(dx, dy, "Nb marks: [%hd]", (*(*(maze->board + maze->solver.x) + maze->solver.y) >> 4) & 15);
+    mvprintw(dx, dy, "Nb marks:      ");
+    mvprintw(dx, dy, "Nb marks: %hd", (*(*(maze->board + maze->solver.x) + maze->solver.y) >> 4) & 15);
 }

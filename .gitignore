@@ -58,3 +58,6 @@ dkms.conf
 RIMAZE
 helper-table.txt
 Maze-Solving.txt
+
+#MACOS
+.DS_Store

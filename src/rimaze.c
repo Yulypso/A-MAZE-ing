@@ -28,7 +28,6 @@ void displayMaze(volatile Maze *maze)
         {
             displayDecorativeWall(maze, i, j);
             createCellAtPosition(mazeTmp, i, j);
-            //displayCells(i, j);
         }
 
     for (unsigned short int i = 0; i < maze->nbL; ++i)

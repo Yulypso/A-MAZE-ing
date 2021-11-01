@@ -49,7 +49,7 @@ void displayMainPath(volatile Maze *maze)
 {
     for (unsigned short int i = 0; i < maze->nbL; ++i)
         for (unsigned short j = 0; j < maze->nbC; ++j)
-            isMainPathCellMarked(maze, i, j) ? mvaddch(startX + 2 * i, startY + 2 * j, ACS_BULLET) : 0;
+            isMainPathCellMarked(maze, i, j) && !isMountain(maze, i, j) ? mvaddch(startX + 2 * i, startY + 2 * j, ACS_BULLET) : 0;
 }
 
 void displayMountains(volatile Maze *maze)
@@ -357,10 +357,10 @@ void solveMaze(volatile Maze *maze, unsigned short int speed, unsigned short int
     {
         attron(COLOR_PAIR(3));
         mvprintw(1, 12, "Found a solution!");
-        displayMainPath(maze);
         attron(COLOR_PAIR(5));
         displayMountains(maze);
         attroff(COLOR_PAIR(5));
+        displayMainPath(maze);
         displayEntrance(maze);
         displayExit(maze);
         displaySolver(maze);

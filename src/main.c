@@ -10,7 +10,7 @@ int main(int argc, char const **argv)
     clear();
     attron(COLOR_PAIR(6));
 
-    unsigned short int speed, nbL, nbC, dev = 0;
+    unsigned short int speed, nbL = 0, nbC = 0, dev = 0;
     char *inputFileName = NULL;
     char *outputFileName = NULL;
     inputFileName = (char *)malloc(50 * sizeof(char));
